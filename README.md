@@ -1,3 +1,6 @@
+# OOAD Challenges - Round 1 - Exercise 1
+Task: Build a TAX system where different products have different tax per state and year.
+
 # poc-bun-tax-system
 
 To install dependencies:
