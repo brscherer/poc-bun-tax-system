@@ -18,7 +18,7 @@ export class Checkout {
 
   getTotalValue(): number {
     return this.productList.reduce((acc, product) => {
-      return acc + product.getValue() * (this.year.getStateTax(this.state) / 100)
+      return acc + product.getValue() * (1 + this.year.getStateTax(this.state) / 100)
     }, 0)
   }
 

@@ -5,24 +5,31 @@ import { Checkout } from "./services/Checkout";
 import { Store } from "./services/Store";
 import { getCurrentDateFormatted } from "./utils/selectors";
 
-const store = new Store()
-
-store.addProduct(new Banana())
-store.addProduct(new Apple())
-
-
-const shoppingCart: Product[] = []
-
-shoppingCart.push(store.getProductByName("banana") )
-shoppingCart.push(store.getProductByName("apple"))
-
-const firstCheckout = new Checkout(shoppingCart, "SF", store)
-firstCheckout.finish()
 
 const server = Bun.serve({
   port: 3000,
   fetch(req) {
-    return new Response(store.formatSales(store.getSalesByDate(getCurrentDateFormatted())));
+    const store = new Store();
+
+    store.addProduct(new Banana());
+    store.addProduct(new Apple());
+
+    const banana = store.getProductByName("banana")
+    const apple = store.getProductByName("apple")
+
+    const shoppingCart: Product[] = [];
+
+    banana && shoppingCart.push(banana);
+    apple && shoppingCart.push(apple);
+
+    const firstCheckout = new Checkout(shoppingCart, "SF", store);
+    firstCheckout.finish();
+
+    const sale = store.getSalesByDate(getCurrentDateFormatted())
+
+    return new Response(
+      sale && store.formatSales(sale)
+    );
   },
 });
 

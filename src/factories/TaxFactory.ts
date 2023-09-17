@@ -10,8 +10,8 @@ export class TaxFactory {
 
   getCurrentYearTax() {
     const currentYear = new Date().getFullYear().toString()
-    const taxInstance = this.YEAR_TAX[currentYear] ?? Year2023Taxes
-    console.log(taxInstance)
-    return taxInstance instanceof YearTaxes ? new this.YEAR_TAX[currentYear]() : false
+    const lastTax = Object.keys(this.YEAR_TAX).length - 1
+    const taxInstance = this.YEAR_TAX[currentYear] ?? this.YEAR_TAX[lastTax]
+    return new taxInstance() instanceof YearTaxes ? new taxInstance() : false
   }
 }

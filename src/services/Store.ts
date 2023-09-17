@@ -5,15 +5,19 @@ export class Store {
   private salesRecord: Map<string, Sale[]> = new Map()
   private productsRecord: Map<string, Product> = new Map()
   
-  getSalesByDate(date: string): Sale[] {
+  getSalesByDate(date: string): Sale[] | undefined {
     return this.salesRecord.get(date)
   }
   
   formatSales(sales: Sale[]): string {
+    const USDollar = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
     return sales.reduce((result, sale) => {
       result += `\n\n
-        Products: ${sale.getProductList().reduce((r, product) => { r += `${product.getName()}, ` }, '')},
-        Total Value: ${sale.getTotal()}
+        Products: ${sale.getProductList().map((product: Product) => product.getName()).join(", ")},
+        Total Value: ${USDollar.format(sale.getTotal())}
         Date: ${sale.getDate()}
       `
       return result
@@ -24,7 +28,7 @@ export class Store {
     this.productsRecord.set(product.getName(), product)
   }
 
-  getProductByName(productName: string): Product {
+  getProductByName(productName: string): Product | undefined {
     return this.productsRecord.get(productName)
   }
 
@@ -34,7 +38,6 @@ export class Store {
 
   makeSale(date: string, sale: Sale) {
     const sales = this.salesRecord.get(date)?.length ? this.salesRecord.get(date) as Sale[] : []
-    console.log({ sales })
     this.salesRecord.set(date, [...sales, sale])
   }
 }
